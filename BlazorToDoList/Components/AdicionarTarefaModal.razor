@@ -8,11 +8,14 @@
                     <button type="button" class="btn-close" @onclick="Fechar"></button>
                 </div>
                 <div class="modal-body">
-
+                    <div class="mb-3">
+                        <label for="descricaoTarefa" class="form-label">Descrição da tarefa</label>
+                        <input type="text" id="descricaoTarefa" class="form-control" @bind="descricao" />
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" @onclick="Fechar">Fechar</button>
-                    <button class="btn btn-primary">Salvar</button>
+                    <button class="btn btn-primary" @onclick="Salvar">Salvar</button>
                 </div>
             </div>
         </div>
@@ -27,8 +30,22 @@
     [Parameter]
     public EventCallback OnFechar { get; set; }
 
+    [Parameter]
+    public EventCallback<string> OnSalvar { get; set; }
+
+    private string descricao;
+
     private async Task Fechar()
     {
         await OnFechar.InvokeAsync();
+    }
+
+    private async Task Salvar()
+    {
+        if (!string.IsNullOrWhiteSpace(descricao))
+        {
+            await OnSalvar.InvokeAsync(descricao);
+            descricao = string.Empty;
+        }
     }
 }

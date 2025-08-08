@@ -14,27 +14,31 @@ namespace BlazorToDoList.Data.Services
             _path = Directory.GetCurrentDirectory();
         }
         
-        public async Task<IEnumerable<Tarefa>> ObterTarefasAsync()
+        public async Task<List<Tarefa>> ObterTarefasAsync()
         {
             string jsonPath = Path.Combine(_path, "tarefas.json");
             if(!File.Exists(jsonPath))
             {
-                return Enumerable.Empty<Tarefa>();
+                return [];
             }
             string json = await File.ReadAllTextAsync(jsonPath);
 
             if(json == string.Empty)
             {
-                return Enumerable.Empty<Tarefa>();
+                return [];
             }
             List<Tarefa> tarefas = JsonSerializer.Deserialize<List<Tarefa>>(json);
 
             return tarefas;
         }
 
-        public async Task SalvarTarefaAsync(List<Tarefa> tarefas)
+        public async Task SalvarTarefaAsync(Tarefa tarefa)
         {
-            string json = JsonSerializer.Serialize(tarefas);
+            List<Tarefa> listaTarefas = await ObterTarefasAsync();
+
+            listaTarefas.Add(tarefa);
+            
+            string json = JsonSerializer.Serialize(listaTarefas);
             string jsonPath = Path.Combine(_path, "tarefas.json");
 
             await File.WriteAllTextAsync(jsonPath, json);

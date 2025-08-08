@@ -4,7 +4,7 @@ namespace BlazorToDoList.Data.Services.Interfaces
 {
     public interface IToDoService
     {
-        Task<IEnumerable<Tarefa>> ObterTarefasAsync();
-        Task SalvarTarefaAsync(List<Tarefa> tarefas);
+        Task<List<Tarefa>> ObterTarefasAsync();
+        Task SalvarTarefaAsync(Tarefa tarefa);
     }
 }

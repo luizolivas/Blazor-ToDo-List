@@ -13,7 +13,7 @@
 
 @if (mostraModal)
 {
-    <AdicionarTarefaModal Visivel="mostraModal" OnFechar="FecharModal"></AdicionarTarefaModal>
+    <AdicionarTarefaModal Visivel="mostraModal" OnFechar="FecharModal" OnSalvar="SalvarTarefa"></AdicionarTarefaModal>
 }
 
 @if (tarefas == null)
@@ -36,7 +36,6 @@ else
                 <tr>
                     <td>@tarefa.Descricao</td>
                     <td><input type="checkbox" @bind="tarefa.Concluida" /></td>
-                    <td><button class="btn btn-danger btn-sm">Remover</button></td>
                 </tr>
             }
         </tbody>
@@ -61,6 +60,20 @@ else
 
     private void FecharModal()
     {
+        mostraModal = false;
+    }
+
+    private async Task SalvarTarefa(string descricao)
+    {
+        var novaTarefa = new Tarefa {
+                Descricao = descricao,
+                Concluida = false
+            };
+
+        await todDoService.SalvarTarefaAsync(novaTarefa);
+
+        tarefas = await todDoService.ObterTarefasAsync();
+
         mostraModal = false;
     }
 }
