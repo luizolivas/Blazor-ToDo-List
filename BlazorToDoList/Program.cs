@@ -1,10 +1,15 @@
 using BlazorToDoList.Components;
+using BlazorToDoList.Data.Services.Interfaces;
+using BlazorToDoList.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddScoped<IToDoService, ToDoService>();
+
 
 var app = builder.Build();
 
