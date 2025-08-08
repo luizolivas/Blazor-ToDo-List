@@ -1,0 +1,66 @@
+﻿@page "/"
+@using BlazorToDoList.Data.Models
+@using BlazorToDoList.Data.Services.Interfaces
+@inject IToDoService todDoService
+@rendermode InteractiveServer
+
+
+<PageTitle>Home</PageTitle>
+
+<h1>Minha Lista de Tarefas</h1>
+
+<button class="btn btn-primary" @onclick="AbreModalAddTarefa">Adicionar Tarefa</button>
+
+@if (mostraModal)
+{
+    <AdicionarTarefaModal Visivel="mostraModal" OnFechar="FecharModal"></AdicionarTarefaModal>
+}
+
+@if (tarefas == null)
+{
+    <p>Carregando Tarefas...</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Concluída</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tarefa in tarefas)
+            {
+                <tr>
+                    <td>@tarefa.Descricao</td>
+                    <td><input type="checkbox" @bind="tarefa.Concluida" /></td>
+                    <td><button class="btn btn-danger btn-sm">Remover</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code{
+
+    private IEnumerable<Tarefa> tarefas;
+    public bool mostraModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tarefas = await todDoService.ObterTarefasAsync();
+    }
+
+    private void AbreModalAddTarefa()
+    {
+        mostraModal = true;
+    }
+
+    private void FecharModal()
+    {
+        mostraModal = false;
+    }
+}
